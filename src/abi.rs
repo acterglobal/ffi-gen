@@ -101,6 +101,7 @@ pub struct AbiObject {
     pub doc: Vec<String>,
     pub name: String,
     pub methods: Vec<AbiFunction>,
+    #[allow(dead_code)]
     pub destructor: String,
 }
 

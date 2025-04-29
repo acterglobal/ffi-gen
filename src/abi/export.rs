@@ -401,6 +401,7 @@ pub enum Instr {
     LiftSlice(Var, Var, Var, NumType),
     LowerSlice(Var, Var, Var, NumType),
     LiftVec(Var, Var, Var, Var, NumType),
+    #[allow(dead_code)]
     LowerVec(Var, Var, Var, Var, NumType),
     LiftRefObject(Var, Var, String),
     LowerRefObject(Var, Var),
