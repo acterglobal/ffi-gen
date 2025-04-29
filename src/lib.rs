@@ -18,9 +18,8 @@ use crate::dart::DartGenerator;
 use crate::js::{JsGenerator, TsGenerator, WasmMultiValueShim};
 use crate::parser::Interface;
 use crate::rust::RustGenerator;
-use anyhow::{Context, Result};
+use anyhow::{Result};
 use std::path::Path;
-use std::process::Command;
 
 pub use crate::abi::Abi;
 
@@ -60,14 +59,6 @@ impl FfiGen {
         let dart = DartGenerator::new(library.to_string(), cdylib.to_string());
         let dart = dart.generate(self.iface.clone()).to_file_string()?;
         std::fs::write(path.as_ref(), dart)?;
-        let status = Command::new(if cfg!(windows) { "dart.bat" } else { "dart" })
-            .arg("format")
-            .arg(path.as_ref())
-            .status()
-            .context("dart not installed")?;
-        if !status.success() {
-            anyhow::bail!("dart format failed");
-        }
         Ok(())
     }
 
@@ -76,14 +67,6 @@ impl FfiGen {
         let js = JsGenerator::default();
         let js = js.generate(self.iface.clone()).to_file_string()?;
         std::fs::write(path.as_ref(), js)?;
-        let status = Command::new("prettier")
-            .arg("--write")
-            .arg(path.as_ref())
-            .status()
-            .context("prettier not installed")?;
-        if !status.success() {
-            anyhow::bail!("prettier failed");
-        }
         Ok(())
     }
 
@@ -92,14 +75,6 @@ impl FfiGen {
         let ts = TsGenerator::default();
         let ts = ts.generate(self.iface.clone()).to_file_string()?;
         std::fs::write(path.as_ref(), ts)?;
-        let status = Command::new("prettier")
-            .arg("--write")
-            .arg(path.as_ref())
-            .status()
-            .context("prettier not installed")?;
-        if !status.success() {
-            anyhow::bail!("prettier failed");
-        }
         Ok(())
     }
 }
